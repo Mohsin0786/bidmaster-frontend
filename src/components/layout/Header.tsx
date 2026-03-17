@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
   Bell, 
@@ -28,6 +28,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const Header = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, logout } = useAuth();
 
   // Simple breadcrumb logic
@@ -102,7 +103,13 @@ const Header = () => {
               <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer text-red-500 focus:bg-red-50 dark:focus:bg-red-950/20" onClick={logout}>
+            <DropdownMenuItem
+              className="cursor-pointer text-red-500 focus:bg-red-50 dark:focus:bg-red-950/20"
+              onClick={async () => {
+                await logout();
+                router.replace('/login');
+              }}
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>
