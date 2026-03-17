@@ -104,13 +104,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       let idToken: string;
       
       if (firebaseUser) {
-        // Firebase user already exists (e.g. from Google sign-in)
+        // Firebase user already exists (e.g. from Google sign-in or email signup)
         // Just get the existing token
         idToken = await firebaseUser.getIdToken();
       } else {
-        // New email/password signup - create Firebase user first
-        const credential = await createUserWithEmailAndPassword(auth, userData.email, 'temporaryPassword123');
-        idToken = await credential.user.getIdToken();
+        // This case should ideally not happen with the current flow
+        throw new Error('No authenticated Firebase user found. Please sign up first.');
       }
       
       // Store token for API calls

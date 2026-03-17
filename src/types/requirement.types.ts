@@ -32,14 +32,14 @@ export interface Attachment {
 
 export interface RequirementFormData {
   title: string;
-  description: string;
+  status: RequirementStatus;
+  description?: string;
   category?: string;
   attachments?: File[];
-  currency: string;
-  ceilingPrice: number;
-  minDecrement: number;
-  startTime: string;
-  endTime: string;
+  currency?: string;
+  ceilingPrice?: number;
+  minDecrement?: number;
+  startTime?: string;
+  endTime?: string;
   participants?: string[]; // email addresses
-  status: RequirementStatus;
 }

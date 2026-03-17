@@ -59,5 +59,7 @@ export const userRegistrationSchema = z.object({
 export type RequirementFormData = z.infer<typeof requirementSchema> & {
   attachments?: File[];
 };
-export type BidFormData = z.infer<typeof bidSchema>;
+export type BidFormData = z.infer<typeof bidSchema> & {
+  attachments?: File[];
+};
 export type UserRegistrationData = z.infer<typeof userRegistrationSchema>;

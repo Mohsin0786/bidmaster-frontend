@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import RegisterForm from '@/components/forms/RegisterForm';
 import { useSearchParams } from 'next/navigation';
 
-const RegisterPage: React.FC = () => {
+const RegisterContent: React.FC = () => {
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect');
 
@@ -22,6 +22,14 @@ const RegisterPage: React.FC = () => {
         <RegisterForm redirectTo={redirect || '/dashboard'} />
       </div>
     </div>
+  );
+};
+
+const RegisterPage: React.FC = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <RegisterContent />
+    </Suspense>
   );
 };
 
