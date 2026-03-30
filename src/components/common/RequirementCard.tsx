@@ -33,9 +33,12 @@ const RequirementCard: React.FC<RequirementCardProps> = ({
   const { user } = useAuth();
   const now = new Date();
   const startTime = requirement.startTime ? new Date(requirement.startTime) : null;
-  const isStartTimePast = startTime ? now >= startTime : true; // If no startTime provided, assume it's live if ACTIVE
+  const endTime = requirement.endTime ? new Date(requirement.endTime) : null;
+  const isStartTimePast = startTime ? now >= startTime : true;
+  const isEndTimePast = endTime ? now > endTime : false;
 
-  const isLive = requirement.status === 'ACTIVE' && isStartTimePast;
+  const isLive = requirement.status === 'ACTIVE' && isStartTimePast && !isEndTimePast;
+  const isExpired = requirement.status === 'ACTIVE' && isEndTimePast;
   // If not active, or active but start time is in the future, it's upcoming
   const isUpcoming = requirement.status === 'DRAFT' || (requirement.status === 'ACTIVE' && !isStartTimePast);
 
@@ -61,8 +64,8 @@ const RequirementCard: React.FC<RequirementCardProps> = ({
       <Card className="rounded-2xl bg-white shadow-sm hover:shadow-md border border-gray-100 overflow-hidden relative flex flex-col p-5 w-full transition-all cursor-pointer" onClick={() => onViewClick?.(requirement._id)}>
         {/* Left vertical colored line */}
         <div className={cn(
-          "absolute left-0 top-0 bottom-0 w-[6px]", 
-          isLive ? "bg-blue-600" : (isUpcoming ? "bg-blue-600" : "bg-gray-300") // Keeping blue for both in the screenshot design, actually the screenshot shows the card has a blue left border for BOTH Live and Upcoming.
+          "absolute left-0 top-0 bottom-0 w-[6px]",
+          isLive ? "bg-blue-600" : isExpired ? "bg-gray-400" : isUpcoming ? "bg-blue-600" : "bg-gray-300"
         )} />
 
         {/* Header row: Title + Actions/Dots */}
@@ -88,6 +91,12 @@ const RequirementCard: React.FC<RequirementCardProps> = ({
               <div className="flex items-center gap-1.5 bg-[#00C853] text-white px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase shadow-sm">
                 <span className="w-1.5 h-1.5 rounded-full bg-white mb-[0.5px]" />
                 LIVE
+              </div>
+            )}
+            {isExpired && (
+              <div className="flex items-center gap-1.5 bg-gray-400 text-white px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-white mb-[0.5px]" />
+                EXPIRED
               </div>
             )}
             {isUpcoming && (
